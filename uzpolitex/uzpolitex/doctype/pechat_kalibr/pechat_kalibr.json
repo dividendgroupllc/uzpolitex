@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "creation": "2026-09-18 13:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["gm2", "col1", "jami_kg", "jami_m2"],
+ "fields": [
+  {
+   "description": "1 м² тўла босмага кетадиган краска (грамм). Ҳар Печать журнал фактидан авто қайта ҳисобланади; Sales Order нормаси шу қийматни олади.",
+   "fieldname": "gm2",
+   "fieldtype": "Float",
+   "label": "г/м² (калибрланган)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {"fieldname": "col1", "fieldtype": "Column Break"},
+  {
+   "fieldname": "jami_kg",
+   "fieldtype": "Float",
+   "label": "Жами факт краска (КГ)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "jami_m2",
+   "fieldtype": "Float",
+   "label": "Жами қоплама (м²)",
+   "precision": "2",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-09-18 13:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Pechat Kalibr",
+ "owner": "Administrator",
+ "permissions": [
+  {"email": 1, "print": 1, "read": 1, "role": "System Manager", "share": 1, "write": 1},
+  {"read": 1, "role": "Начальник цеха"}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

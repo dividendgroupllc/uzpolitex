@@ -1,0 +1,26 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-15 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": ["baza_rang", "ulush_pct", "izoh"],
+ "fields": [
+  {"columns": 5, "fieldname": "baza_rang", "fieldtype": "Link", "in_list_view": 1, "label": "Асосий краска", "options": "Item", "reqd": 1},
+  {"columns": 3, "fieldname": "ulush_pct", "fieldtype": "Float", "in_list_view": 1, "label": "Улуш %", "precision": "1", "non_negative": 1, "reqd": 1},
+  {"columns": 3, "fieldname": "izoh", "fieldtype": "Data", "in_list_view": 1, "label": "Изоҳ"}
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-15 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Uzpolitex Kraska Retsept",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,73 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-14 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "rang",
+  "pantone",
+  "qoplama_pct",
+  "rgb",
+  "avto"
+ ],
+ "fields": [
+  {
+   "columns": 3,
+   "fieldname": "rang",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Краска",
+   "options": "Item",
+   "description": "Омбордаги краска. AI мослаёлмаса бўш қолади — оператор танлайди (Pantone таклифига қаранг)."
+  },
+  {
+   "columns": 2,
+   "fieldname": "pantone",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Pantone (таклиф)",
+   "description": "AI таклиф қилган энг яқин Pantone. Дизайн файлидан аниқ кодни тасдиқланг."
+  },
+  {
+   "columns": 2,
+   "description": "Печать юзасининг неча % и шу ранг билан қопланган",
+   "fieldname": "qoplama_pct",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Қоплама %",
+   "non_negative": 1,
+   "precision": "1"
+  },
+  {
+   "columns": 2,
+   "fieldname": "rgb",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Аниқланган ранг",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "columns": 1,
+   "fieldname": "avto",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "AI",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Pechat Dizayn Rang",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

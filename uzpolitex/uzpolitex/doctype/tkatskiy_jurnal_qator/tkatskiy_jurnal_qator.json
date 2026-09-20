@@ -1,0 +1,96 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-06 09:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "stanok",
+  "mahsulot",
+  "metr",
+  "kg",
+  "nitka_kg",
+  "gr_1m",
+  "vyrabotka_pm"
+ ],
+ "fields": [
+  {
+   "columns": 1,
+   "fieldname": "stanok",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "№ станка",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "mahsulot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Продукция",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "metr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Метр",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 2,
+   "fieldname": "kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "КГ",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 1,
+   "description": "Автоматически = КГ; можно изменить",
+   "fieldname": "nitka_kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Нитка (КГ)",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 1,
+   "fieldname": "gr_1m",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "1М (ГР)",
+   "precision": "3",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "description": "Вводится вручную из журнала смены",
+   "fieldname": "vyrabotka_pm",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Выработка п/м",
+   "non_negative": 1,
+   "precision": "2"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-06 09:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Tkatskiy Jurnal Qator",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

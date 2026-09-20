@@ -1,0 +1,29 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-18 13:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": ["jurnal", "sana", "smena", "qop", "metr", "kraska_kg"],
+ "fields": [
+  {"columns": 2, "fieldname": "jurnal", "fieldtype": "Link", "in_list_view": 1, "label": "Журнал", "options": "Pechat Jurnal", "read_only": 1},
+  {"columns": 1, "fieldname": "sana", "fieldtype": "Date", "in_list_view": 1, "label": "Сана", "read_only": 1},
+  {"columns": 1, "fieldname": "smena", "fieldtype": "Data", "in_list_view": 1, "label": "Смена", "read_only": 1},
+  {"columns": 3, "fieldname": "qop", "fieldtype": "Link", "in_list_view": 1, "label": "Қоп", "options": "Item", "read_only": 1},
+  {"columns": 2, "fieldname": "metr", "fieldtype": "Float", "in_list_view": 1, "label": "Босилди (М)", "precision": "2", "read_only": 1},
+  {"columns": 1, "fieldname": "kraska_kg", "fieldtype": "Float", "in_list_view": 1, "label": "Краска КГ", "precision": "2", "read_only": 1}
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-18 13:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Pechat Topshiriq Fakt",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,62 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-18 16:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": ["rang", "fakt_kg", "ai_kg", "farq"],
+ "fields": [
+  {
+   "columns": 4,
+   "fieldname": "rang",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Краска",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "description": "Смена бўйича ҳақиқий сарф",
+   "fieldname": "fakt_kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Факт КГ",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 2,
+   "description": "Шу смена журналларидаги AI ҳисоб жами",
+   "fieldname": "ai_kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "AI КГ",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "description": "Факт − AI",
+   "fieldname": "farq",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Фарқ",
+   "precision": "2",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-18 16:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Pechat Smena Fakt Qator",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

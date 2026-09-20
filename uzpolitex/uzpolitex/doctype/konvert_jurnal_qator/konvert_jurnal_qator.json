@@ -1,0 +1,104 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-11 20:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "pechat_jurnal",
+  "topshiriq",
+  "mahsulot",
+  "sht",
+  "kg",
+  "rasxod_mahsulot",
+  "rasxod_metr",
+  "gr_dona"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "pechat_jurnal",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Печать ёзуви",
+   "options": "Pechat Jurnal",
+   "description": "Босма ёзувини танланг — қоп ва расход (босма рулон) авто тушади"
+  },
+  {
+   "columns": 2,
+   "fieldname": "topshiriq",
+   "fieldtype": "Link",
+   "label": "Топшириқ",
+   "options": "Pechat Topshiriq",
+   "description": "Печать ёзувидан авто",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "mahsulot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Продукт",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "sht",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "ШТ",
+   "non_negative": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "КГ",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 2,
+   "fieldname": "rasxod_mahsulot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Расход (рулон)",
+   "options": "Item"
+  },
+  {
+   "columns": 1,
+   "description": "Авто = ШТ × норма / 10 000; можно изменить",
+   "fieldname": "rasxod_metr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Расход (М)",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 1,
+   "description": "КГ / ШТ × 1000",
+   "fieldname": "gr_dona",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "ГР в 1 шт",
+   "precision": "1",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-11 20:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Konvert Jurnal Qator",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

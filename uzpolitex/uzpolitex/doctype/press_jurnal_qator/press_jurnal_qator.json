@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-19 18:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "kk_jurnal",
+  "mahsulot",
+  "sht",
+  "kipa_soni",
+  "lenta_kg"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "kk_jurnal",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "КК ёзуви",
+   "options": "KK Jurnal",
+   "description": "Саралаш ёзувини танланг — қоп ва яроқли сони авто тушади"
+  },
+  {
+   "columns": 2,
+   "fieldname": "mahsulot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Қоп",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "sht",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "ШТ",
+   "non_negative": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "kipa_soni",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Кипа сони",
+   "non_negative": 1,
+   "description": "Нечта кипа (тўп) қилинди — маълумот учун"
+  },
+  {
+   "columns": 2,
+   "fieldname": "lenta_kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Пресс лента (КГ)",
+   "non_negative": 1,
+   "precision": "2",
+   "description": "Шу қаторга кетган пресс лента"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-19 20:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Press Jurnal Qator",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

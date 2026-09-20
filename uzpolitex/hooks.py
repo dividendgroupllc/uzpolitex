@@ -5,6 +5,34 @@ app_description = "qop zavod"
 app_email = "abdullohuchkunov@gmail.com"
 app_license = "mit"
 
+# Uzpolitex ishlab chiqarish sozlamalari
+# ------------------
+
+doctype_js = {
+	"Stock Entry": "public/js/stock_entry.js",
+	"Sales Order": "public/js/sales_order.js",
+	"Item": "public/js/item.js",
+}
+
+doc_events = {
+	"Stock Entry": {
+		"validate": "uzpolitex.production.stock_entry.validate",
+	},
+	"Sales Order": {
+		"before_validate": "uzpolitex.pechat.order_intake.before_validate",
+		"on_submit": "uzpolitex.pechat.topshiriq.on_submit_so",
+	},
+}
+
+after_migrate = [
+	"uzpolitex.setup.custom_fields.apply",
+	"uzpolitex.setup.form_tuning.apply",
+]
+
+override_doctype_dashboards = {
+	"Sales Order": "uzpolitex.pechat.dashboard.sales_order_dashboard",
+}
+
 # Apps
 # ------------------
 

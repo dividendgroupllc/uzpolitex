@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-18 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "istable": 1,
+ "module": "Uzpolitex",
+ "name": "Pechat Topshiriq Kraska",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "field_order": [
+  "rang",
+  "turi",
+  "reja_kg",
+  "fakt_kg",
+  "retsept",
+  "pantone"
+ ],
+ "fields": [
+  {
+   "columns": 3,
+   "fieldname": "rang",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Ранг",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "turi",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Тури",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "reja_kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Режа КГ",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "fakt_kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Факт КГ",
+   "precision": "2",
+   "description": "Авто: Печать журналлари йиғиндиси; қўлда ўзгартирса бўлади"
+  },
+  {
+   "columns": 4,
+   "fieldname": "retsept",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Аралашма ретсепти",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "pantone",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Pantone",
+   "read_only": 1
+  }
+ ],
+ "permissions": [],
+ "links": []
+}

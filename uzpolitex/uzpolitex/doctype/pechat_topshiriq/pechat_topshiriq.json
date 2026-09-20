@@ -1,0 +1,168 @@
+{
+ "actions": [],
+ "autoname": "ПТ-.YY.-.#####",
+ "creation": "2026-09-18 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "is_submittable": 1,
+ "module": "Uzpolitex",
+ "name": "Pechat Topshiriq",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "title_field": "sales_order",
+ "field_order": [
+  "sales_order",
+  "customer",
+  "col1",
+  "sana",
+  "holat",
+  "sec_qop",
+  "qoplar",
+  "sec_kraska",
+  "kraska_izoh",
+  "kraska_reja",
+  "sec_fakt",
+  "fakt_izoh",
+  "fakt",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Сотув заказ",
+   "options": "Sales Order",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Мижоз",
+   "options": "Customer",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "col1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sana",
+   "fieldtype": "Date",
+   "label": "Сана",
+   "default": "Today",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "holat",
+   "fieldtype": "Select",
+   "label": "Ҳолат",
+   "options": "Черновик\nВ печати\nТайёр",
+   "default": "Черновик",
+   "in_list_view": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "sec_qop",
+   "fieldtype": "Section Break",
+   "label": "Қоплар"
+  },
+  {
+   "fieldname": "qoplar",
+   "fieldtype": "Table",
+   "label": "Қоплар",
+   "options": "Pechat Topshiriq Qop",
+   "read_only": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "sec_kraska",
+   "fieldtype": "Section Break",
+   "label": "Краска режа (AI)"
+  },
+  {
+   "fieldname": "kraska_izoh",
+   "fieldtype": "HTML",
+   "options": "<div class='text-muted small'>AI ҳисоблаган <b>режа</b> — қўлда таҳрирласа бўлади. <b>Факт</b> Печать журналларидан авто тушади (қўлда ҳам ўзгартириш мумкин, лекин янги журнал киритилса қайта ёзилади).</div>"
+  },
+  {
+   "fieldname": "kraska_reja",
+   "fieldtype": "Table",
+   "label": "Краска режа",
+   "options": "Pechat Topshiriq Kraska",
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "sec_fakt",
+   "fieldtype": "Section Break",
+   "label": "Ҳақиқий сарф"
+  },
+  {
+   "fieldname": "fakt_izoh",
+   "fieldtype": "HTML",
+   "options": "<div class='text-muted small'>Ҳақиқий краска сарфи <b>смена бўйича</b> Печать Журналда ёзилади (ҳар сменага жами кг). Калибрлаш смена факти ÷ шу сменада босилган режа майдонидан ҳисобланади.</div>"
+  },
+  {
+   "fieldname": "fakt",
+   "fieldtype": "Table",
+   "label": "Факт (сменалар)",
+   "options": "Pechat Topshiriq Fakt",
+   "read_only": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "Pechat Topshiriq",
+   "read_only": 1,
+   "no_copy": 1,
+   "print_hide": 1
+  }
+ ],
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Начальник цеха",
+   "share": 1,
+   "write": 1,
+   "submit": 1,
+   "cancel": 1,
+   "amend": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Оператор производства",
+   "write": 1
+  }
+ ],
+ "links": [
+  {
+   "group": "Печать",
+   "link_doctype": "Pechat Jurnal",
+   "link_fieldname": "topshiriq"
+  }
+ ]
+}
