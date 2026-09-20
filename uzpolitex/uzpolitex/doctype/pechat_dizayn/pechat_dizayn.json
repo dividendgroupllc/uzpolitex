@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "autoname": "field:dizayn_nomi",
+ "creation": "2026-09-14 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "dizayn_nomi", "komponent", "col_break_1", "oq_baza_pct",
+  "rasm", "izoh", "sec_ranglar", "ai_help", "ranglar"
+ ],
+ "fields": [
+  {
+   "fieldname": "dizayn_nomi",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Дизайн номи",
+   "reqd": 1,
+   "unique": 1,
+   "description": "Масалан: Veltora наливной пол — Олд"
+  },
+  {
+   "fieldname": "komponent",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Компонент",
+   "options": "Олд\nОрқа\nЛента",
+   "reqd": 1,
+   "description": "Қопнинг қайси томони: олд юза, орқа юза ёки ён лента"
+  },
+  {"fieldname": "col_break_1", "fieldtype": "Column Break"},
+  {
+   "fieldname": "oq_baza_pct",
+   "fieldtype": "Float",
+   "label": "Оқ база % (краскасиз)",
+   "read_only": 1,
+   "precision": "1",
+   "description": "Юзанинг неча % и оқ (босилмаган). Бу қисмга краска сарфланмайди."
+  },
+  {
+   "fieldname": "rasm",
+   "fieldtype": "Attach Image",
+   "label": "Дизайн расми"
+  },
+  {"fieldname": "izoh", "fieldtype": "Small Text", "label": "Изоҳ"},
+  {"fieldname": "sec_ranglar", "fieldtype": "Section Break", "label": "Ранглар ва қоплама"},
+  {
+   "fieldname": "ai_help",
+   "fieldtype": "HTML",
+   "options": "<div class='text-muted small'>«AI: расмни таҳлил қил» тугмаси ранглар ва қопламани <b>таклиф</b> қилади. Керак бўлса қўлда тузатинг — ранг номини, қоплама % ни ўзгартиринг ёки қатор қўшинг/ўчиринг.</div>"
+  },
+  {
+   "fieldname": "ranglar",
+   "fieldtype": "Table",
+   "label": "Ранглар",
+   "options": "Pechat Dizayn Rang"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-09-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Pechat Dizayn",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1},
+  {"create": 1, "delete": 1, "print": 1, "read": 1, "report": 1, "role": "Начальник цеха", "share": 1, "write": 1},
+  {"create": 1, "read": 1, "report": 1, "role": "Оператор производства", "write": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

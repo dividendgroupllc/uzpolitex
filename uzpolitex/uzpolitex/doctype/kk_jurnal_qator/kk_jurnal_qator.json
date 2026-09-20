@@ -1,0 +1,83 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-19 18:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "konvert_jurnal",
+  "mahsulot",
+  "yaroqli_sht",
+  "brak_sht",
+  "brak_kg",
+  "tekshirildi_sht"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "konvert_jurnal",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Конверт ёзуви",
+   "options": "Konvert Jurnal",
+   "description": "Тикув ёзувини танланг — қоп авто тушади"
+  },
+  {
+   "columns": 2,
+   "fieldname": "mahsulot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Қоп",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "yaroqli_sht",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Яроқли (ШТ)",
+   "non_negative": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "brak_sht",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Брак (ШТ)",
+   "non_negative": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "brak_kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Брак (КГ)",
+   "non_negative": 1,
+   "precision": "2",
+   "description": "Брак қопларнинг оғирлиги — «Брак коп» га КГ да киради"
+  },
+  {
+   "columns": 1,
+   "fieldname": "tekshirildi_sht",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Жами",
+   "read_only": 1,
+   "description": "Яроқли + брак"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-19 19:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "KK Jurnal Qator",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

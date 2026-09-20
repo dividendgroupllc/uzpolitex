@@ -1,0 +1,92 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-18 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "istable": 1,
+ "module": "Uzpolitex",
+ "name": "Pechat Topshiriq Qop",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "field_order": [
+  "item",
+  "soni",
+  "tikildi",
+  "en_cm",
+  "boy_cm",
+  "dizayn_old",
+  "dizayn_orqa",
+  "dizayn_lenta"
+ ],
+ "fields": [
+  {
+   "columns": 3,
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Қоп",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "soni",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Сони",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "tikildi",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Тикилди",
+   "read_only": 1,
+   "description": "Конверт журналларидан авто"
+  },
+  {
+   "columns": 1,
+   "fieldname": "en_cm",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Эни",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "boy_cm",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Бўйи",
+   "read_only": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "dizayn_old",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "ОЛД дизайн",
+   "options": "Pechat Dizayn",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dizayn_orqa",
+   "fieldtype": "Link",
+   "label": "Орқа",
+   "options": "Pechat Dizayn",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dizayn_lenta",
+   "fieldtype": "Link",
+   "label": "Лента",
+   "options": "Pechat Dizayn",
+   "read_only": 1
+  }
+ ],
+ "permissions": [],
+ "links": []
+}

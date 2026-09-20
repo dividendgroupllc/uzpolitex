@@ -1,0 +1,85 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-06 16:40:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "kirim_mahsulot",
+  "kirim_metr",
+  "kg",
+  "chiqim_mahsulot",
+  "chiqim_metr",
+  "gr_1m"
+ ],
+ "fields": [
+  {
+   "columns": 3,
+   "fieldname": "kirim_mahsulot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Порезанный рулон",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "kirim_metr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Метр",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 1,
+   "fieldname": "kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "КГ",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 3,
+   "fieldname": "chiqim_mahsulot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Полученная лента",
+   "options": "Item"
+  },
+  {
+   "columns": 2,
+   "description": "Метраж ленты = метр рулона × 2",
+   "fieldname": "chiqim_metr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Получено (М)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "description": "КГ / полученный метр × 1000",
+   "fieldname": "gr_1m",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "В 1 М (ГР)",
+   "precision": "3",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-06 16:40:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Rezka Jurnal Qator",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

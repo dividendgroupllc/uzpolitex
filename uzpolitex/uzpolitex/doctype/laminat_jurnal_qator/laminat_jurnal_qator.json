@@ -1,0 +1,135 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-06 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "mahsulot",
+  "metr",
+  "kg",
+  "rasxod_mahsulot",
+  "rasxod_metr",
+  "rasxod_kg",
+  "sec_hisob",
+  "norma_siryo",
+  "norma_dp",
+  "siryo_kg",
+  "dp_kg",
+  "v_1m"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "mahsulot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Производимый продукт",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "metr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Метр",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 1,
+   "fieldname": "kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "КГ",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 2,
+   "fieldname": "rasxod_mahsulot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Расходуемый продукт",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "rasxod_metr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Расх. метр",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 1,
+   "fieldname": "rasxod_kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Расх. КГ",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "fieldname": "sec_hisob",
+   "fieldtype": "Section Break",
+   "label": "Расчёт (автоматически)"
+  },
+  {
+   "description": "(КГ − Расх. КГ) × 82%",
+   "fieldname": "norma_siryo",
+   "fieldtype": "Float",
+   "label": "Норма Сырьё ламинат",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "description": "(КГ − Расх. КГ) × 18%",
+   "fieldname": "norma_dp",
+   "fieldtype": "Float",
+   "label": "Норма Добавочный",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "description": "Факт смены, распределённый по норме",
+   "fieldname": "siryo_kg",
+   "fieldtype": "Float",
+   "label": "Сырьё ламинат (КГ)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dp_kg",
+   "fieldtype": "Float",
+   "label": "Добавочный (КГ)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "v_1m",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "В 1 М (ГР)",
+   "precision": "3",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-06 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Laminat Jurnal Qator",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

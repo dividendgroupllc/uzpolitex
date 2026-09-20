@@ -1,0 +1,212 @@
+{
+ "actions": [],
+ "autoname": "format:ТКЖ-{YY}-{#####}",
+ "creation": "2026-09-06 09:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "posting_date",
+  "smena",
+  "col_asosiy",
+  "xodim",
+  "xodim_nomi",
+  "company",
+  "sec_stanoklar",
+  "stanok_dan",
+  "col_stanok",
+  "stanok_gacha",
+  "sec_qatorlar",
+  "qatorlar",
+  "sec_jami",
+  "jami_metr",
+  "jami_kg",
+  "col_jami",
+  "jami_nitka",
+  "sec_hujjatlar",
+  "stock_entries",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Дата",
+   "reqd": 1
+  },
+  {
+   "fieldname": "smena",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Смена",
+   "options": "\n1-Смена\n2-Смена\n3-Смена",
+   "reqd": 1
+  },
+  {
+   "fieldname": "col_asosiy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "xodim",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Сотрудник",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "xodim.employee_name",
+   "fieldname": "xodim_nomi",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Ф.И.О.",
+   "read_only": 1
+  },
+  {
+   "default": "Uzpolitex Holding",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "sec_stanoklar",
+   "fieldtype": "Section Break",
+   "label": "Станки"
+  },
+  {
+   "description": "Введите диапазон — строки появятся автоматически",
+   "fieldname": "stanok_dan",
+   "fieldtype": "Int",
+   "label": "Станок с №",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "col_stanok",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "stanok_gacha",
+   "fieldtype": "Int",
+   "label": "по №",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "sec_qatorlar",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "qatorlar",
+   "fieldtype": "Table",
+   "label": "Выработка по станкам",
+   "options": "Tkatskiy Jurnal Qator",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sec_jami",
+   "fieldtype": "Section Break",
+   "label": "Итого"
+  },
+  {
+   "fieldname": "jami_metr",
+   "fieldtype": "Float",
+   "label": "Всего метров",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "jami_kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Всего КГ",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "col_jami",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "jami_nitka",
+   "fieldtype": "Float",
+   "label": "Нитка всего (КГ)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.stock_entries",
+   "fieldname": "sec_hujjatlar",
+   "fieldtype": "Section Break",
+   "label": "Складские документы"
+  },
+  {
+   "fieldname": "stock_entries",
+   "fieldtype": "Small Text",
+   "label": "Созданные документы",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Tkatskiy Jurnal",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-09-06 09:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Tkatskiy Jurnal",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Оператор производства",
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Начальник цеха",
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "xodim_nomi",
+ "track_changes": 1
+}

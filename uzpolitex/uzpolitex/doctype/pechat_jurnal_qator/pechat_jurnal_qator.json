@@ -1,0 +1,92 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-09-08 15:30:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "topshiriq",
+  "qop_item",
+  "metr",
+  "rasxod_mahsulot",
+  "rasxod_metr",
+  "bosma_rulon",
+  "kraska_kg"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "topshiriq",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Топшириқ",
+   "options": "Pechat Topshiriq",
+   "reqd": 1
+  },
+  {
+   "columns": 3,
+   "fieldname": "qop_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Қоп (заказ)",
+   "options": "Item"
+  },
+  {
+   "columns": 1,
+   "fieldname": "metr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Босилган метр",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 2,
+   "description": "Қоп энидан авто; керак бўлса ўзгартиринг",
+   "fieldname": "rasxod_mahsulot",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Ламинат рулон",
+   "options": "Item"
+  },
+  {
+   "description": "Печать 1:1 — босилган метрга тенг",
+   "fieldname": "rasxod_metr",
+   "fieldtype": "Float",
+   "label": "Расход (М)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "description": "Шу заказнинг босма рулони — авто",
+   "fieldname": "bosma_rulon",
+   "fieldtype": "Link",
+   "label": "Босма рулон (чиқим)",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "description": "Смена краскаси дизайн улушига кўра тақсимланди",
+   "fieldname": "kraska_kg",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Краска КГ",
+   "precision": "2",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-18 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Uzpolitex",
+ "name": "Pechat Jurnal Qator",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

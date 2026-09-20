@@ -1,0 +1,424 @@
+{%- extends "templates/web.html" -%}
+
+{%- block title -%}Сех терминали{%- endblock -%}
+
+{%- block content -%}
+<style>
+	/* sayt qobig'ini yashiramiz — terminal to'liq ekran */
+	header, .navbar, footer, .web-footer, .page-breadcrumbs, .website-banner { display: none !important; }
+	.main-section, .page-content-wrapper, .container { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+	body { background: #f0f2f5; -webkit-tap-highlight-color: transparent; }
+
+	.tw { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; padding: 10px; max-width: 1280px; margin: 0 auto; }
+	.t-header { display: flex; align-items: center; gap: 12px; background: #1a3d6d; color: #fff;
+		border-radius: 14px; padding: 12px 18px; margin-bottom: 12px; flex-wrap: wrap; }
+	.t-header h1 { font-size: 26px; margin: 0; font-weight: 800; letter-spacing: .5px; }
+	.t-header .spacer { flex: 1; }
+	.t-header select { font-size: 18px; padding: 8px 10px; border-radius: 10px; border: none; }
+	.t-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 12px; }
+	@media (max-width: 900px) { .t-grid { grid-template-columns: 1fr; } }
+	.t-panel { background: #fff; border-radius: 14px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+	.t-panel h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 1px; color: #667; margin: 0 0 10px; }
+	.t-cards { display: flex; flex-direction: column; gap: 10px; max-height: 56vh; overflow-y: auto; }
+	.t-card { display: flex; gap: 12px; align-items: center; border: 2px solid #e3e7ee; border-radius: 12px; padding: 10px; }
+	.t-card img { width: 84px; height: 84px; object-fit: cover; border-radius: 8px; background: #eee; }
+	.t-card .noimg { width: 84px; height: 84px; border-radius: 8px; background: #eef1f6; display: flex;
+		align-items: center; justify-content: center; font-size: 30px; }
+	.t-card .info { flex: 1; min-width: 0; }
+	.t-card .nomi { font-size: 19px; font-weight: 700; }
+	.t-card .meta { font-size: 14px; color: #667; margin-top: 2px; }
+	.t-card .holat { font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 20px; display: inline-block; margin-top: 4px; }
+	.h-chernovik { background: #fff3cd; color: #7a5c00; }
+	.h-pechat { background: #d1e7ff; color: #084298; }
+	.t-card button { font-size: 17px; font-weight: 700; padding: 14px 18px; border-radius: 12px;
+		border: none; background: #1a7f37; color: #fff; min-width: 110px; }
+	.bal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+	.bal { border-radius: 10px; padding: 10px; background: #f6f8fb; border: 1px solid #e3e7ee; }
+	.bal .q { font-size: 20px; font-weight: 800; }
+	.bal .n { font-size: 12px; color: #556; margin-top: 2px; word-break: break-word; }
+	.bal.past { background: #fdecec; border-color: #f3b8b8; }
+	.t-bugun { margin-top: 12px; }
+	.t-bugun .row { display: flex; gap: 10px; padding: 8px 4px; border-bottom: 1px solid #eef1f6; font-size: 15px; align-items: center; }
+	.badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
+	.b0 { background: #fff3cd; color: #7a5c00; } .b1 { background: #d4edda; color: #14532d; }
+	.t-actions { display: flex; gap: 10px; margin-top: 12px; }
+	.t-actions button { flex: 1; font-size: 20px; font-weight: 800; padding: 18px; border-radius: 14px; border: none; }
+	.a-yangi { background: #1a7f37; color: #fff; }
+	.a-smf { background: #7a4bd6; color: #fff; }
+	/* modal */
+	.t-modal { position: fixed; inset: 0; background: rgba(10,20,40,.55); display: none;
+		align-items: center; justify-content: center; z-index: 999; padding: 10px; }
+	.t-modal.open { display: flex; }
+	.t-box { background: #fff; border-radius: 16px; padding: 18px; width: 100%; max-width: 520px;
+		max-height: 92vh; overflow-y: auto; }
+	.t-box h3 { margin: 0 0 12px; font-size: 21px; }
+	.t-box label { display: block; font-size: 14px; color: #556; margin: 10px 0 4px; }
+	.t-box select, .t-box input { width: 100%; font-size: 20px; padding: 12px; border-radius: 10px;
+		border: 2px solid #cfd6e0; box-sizing: border-box; }
+	.t-box input:focus, .t-box select:focus { border-color: #1a3d6d; outline: none; }
+	.t-box .btns { display: flex; gap: 10px; margin-top: 16px; }
+	.t-box .btns button { flex: 1; font-size: 19px; font-weight: 800; padding: 15px; border-radius: 12px; border: none; }
+	.saqla { background: #1a7f37; color: #fff; } .yop { background: #e3e7ee; }
+	.smf-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+	.smf-row .r { flex: 1; font-size: 17px; font-weight: 600; }
+	.smf-row .ai { width: 82px; text-align: right; color: #667; font-size: 15px; }
+	.smf-row input { width: 100px !important; text-align: right; }
+	.tk-head, .tk-row { display: grid; grid-template-columns: 52px 1fr 92px 92px 92px; gap: 6px; align-items: center; }
+	.tk-head { font-size: 12px; color: #667; font-weight: 700; margin: 8px 0 4px; }
+	.tk-row { margin: 4px 0; }
+	.tk-row .st { font-size: 17px; font-weight: 800; text-align: center; }
+	.tk-row select, .tk-row input { font-size: 16px !important; padding: 8px !important; }
+	.natija { background: #f0fdf4; border: 2px solid #86efac; border-radius: 12px; padding: 12px; margin-top: 10px; font-size: 16px; }
+	.xato { background: #fdecec; border: 2px solid #f3b8b8; border-radius: 12px; padding: 12px; margin-top: 10px; font-size: 15px; white-space: pre-wrap; }
+</style>
+
+<div class="tw" id="tw">
+	<div class="t-header">
+		<h1 id="t-title">СЕХ ТЕРМИНАЛИ</h1>
+		<div class="spacer"></div>
+		<span id="t-sana" style="font-size:18px;font-weight:600"></span>
+		<select id="t-smena">
+			<option>1-Смена</option><option>2-Смена</option><option>3-Смена</option>
+		</select>
+		<select id="t-xodim"></select>
+	</div>
+	<div class="t-grid">
+		<div class="t-panel">
+			<h2>Навбатдаги заказлар</h2>
+			<div class="t-cards" id="t-navbat"></div>
+		</div>
+		<div class="t-panel">
+			<h2>Материал баланси</h2>
+			<div class="bal-grid" id="t-rulon"></div>
+			<h2 style="margin-top:14px">Краскалар</h2>
+			<div class="bal-grid" id="t-kraska"></div>
+		</div>
+	</div>
+	<div class="t-panel t-bugun">
+		<h2>Бугунги ёзувлар</h2>
+		<div id="t-bugun"></div>
+		<div class="t-actions">
+			<button class="a-yangi" onclick="ochYangi()">+ ЯНГИ ЁЗУВ</button>
+			<button class="a-smf" onclick="ochSmf()">СМЕНА КРАСКА ФАКТИ</button>
+		</div>
+	</div>
+</div>
+
+<!-- Yangi yozuv modali (universal) -->
+<div class="t-modal" id="m-yangi">
+	<div class="t-box">
+		<h3 id="f-title">Янги ёзув</h3>
+		<div id="f-fields"></div>
+		<div id="f-natija"></div>
+		<div class="btns">
+			<button class="yop" onclick="yop('m-yangi')">Ёпиш</button>
+			<button class="saqla" id="f-saqla" onclick="saqlaYangi()">САҚЛАШ</button>
+		</div>
+	</div>
+</div>
+
+<!-- Ткацкий diapazon modali -->
+<div class="t-modal" id="m-tk">
+	<div class="t-box" style="max-width:860px">
+		<h3>Ткацкий — смена киритиш</h3>
+		<div class="tk-head"><span>№</span><span>Маҳсулот</span><span>Метр</span><span>КГ</span><span>Выраб. п/м</span></div>
+		<div id="tk-rows" style="max-height:56vh;overflow-y:auto"></div>
+		<div id="tk-natija"></div>
+		<div class="btns">
+			<button class="yop" onclick="yop('m-tk')">Ёпиш</button>
+			<button class="saqla" id="tk-saqla" onclick="tkSaqla()">САҚЛАШ</button>
+		</div>
+	</div>
+</div>
+
+<!-- СМФ modali -->
+<div class="t-modal" id="m-smf">
+	<div class="t-box">
+		<h3>Смена краска факти</h3>
+		<div style="font-size:14px;color:#667">Бутун смена учун ҳақиқий сарф — БИР МАРТА. AI устуни журналлардан.</div>
+		<div id="s-rows"></div>
+		<div id="s-natija"></div>
+		<div class="btns">
+			<button class="yop" onclick="yop('m-smf')">Ёпиш</button>
+			<button class="saqla" id="s-saqla" onclick="saqlaSmf()">САҚЛАШ</button>
+		</div>
+	</div>
+</div>
+
+<script>
+let H = null;
+let STAGE = null;
+
+const TITLES = { pechat: "ПЕЧАТЬ", konvert: "КОНВЕРТ (ТИКУВ)", kk: "СИФАТ НАЗОРАТИ", press: "ПРЕСС",
+	tkatskiy: "ТКАЦКИЙ", laminat: "ЛАМИНАТ", ekstruder: "ЭКСТРУДОР" };
+
+async function api(method, args) {
+	const r = await fetch("/api/method/uzpolitex.terminal.api." + method, {
+		method: "POST",
+		headers: { "Content-Type": "application/json", "X-Frappe-CSRF-Token": "{{ csrf_token }}" },
+		body: JSON.stringify(args || {}),
+	});
+	const j = await r.json();
+	if (!r.ok) {
+		let msg = "Хатолик";
+		try { msg = JSON.parse(j._server_messages || "[]").map(m => JSON.parse(m).message).join("\n") || j.exception || msg; } catch (e) { msg = j.exception || msg; }
+		throw new Error(msg.replace(/<[^>]+>/g, ""));
+	}
+	return j.message;
+}
+
+function el(id) { return document.getElementById(id); }
+function yop(id) { el(id).classList.remove("open"); }
+
+async function yukla() {
+	H = await api("holat");
+	STAGE = H.stage;
+	el("t-sana").textContent = H.sana;
+	if (H.tayyor_emas) {
+		el("tw").innerHTML = "<div class='t-panel' style='text-align:center;padding:60px;font-size:22px'>Бу сех терминали ҳали тайёрланмоқда.</div>";
+		return;
+	}
+	el("t-title").textContent = TITLES[STAGE] || STAGE;
+	el("t-xodim").innerHTML = (H.xodimlar || []).map(x => `<option value="${x.name}">${x.employee_name}</option>`).join("");
+	document.querySelector(".a-smf").style.display = STAGE === "pechat" ? "" : "none";
+
+	if (STAGE === "pechat") {
+		el("t-navbat").innerHTML = H.navbat.map(n => karta(n.rasm, n.qop,
+			`${n.customer || ""} · ${n.soni} дона · керак ≈${n.kerak_metr} м · босилди ${n.bosildi_metr} м`,
+			`<span class="holat ${n.holat === "Черновик" ? "h-chernovik" : "h-pechat"}">${n.holat}</span>`,
+			`ochYangi('${n.topshiriq}','${n.qop}')`, "▶ БОСИШ")).join("") || bosh("Навбатда заказ йўқ");
+		el("t-rulon").innerHTML = H.rulonlar.map(bal).join("");
+		el("t-kraska").innerHTML = H.kraskalar.map(bal).join("");
+		el("t-bugun").innerHTML =
+			H.bugun.map(j => qator(j.name, j.smena, j.qop_item, `${j.metr} м · ${j.jami_kraska_kg || 0} кг`, j.docstatus)).join("") +
+			H.smf_bugun.map(s => qator(s.name, s.smena, "Смена краска факти", `факт ${s.jami_fakt} / AI ${s.jami_ai} кг`, s.docstatus)).join("") ||
+			bosh("Ҳали ёзув йўқ");
+		return;
+	}
+
+	// boshqa sexlar — umumiy render
+	document.querySelectorAll(".t-panel h2")[1].textContent = "Материал баланси";
+	el("t-kraska").innerHTML = "";
+	el("t-rulon").innerHTML = (H.balans || []).map(bal).join("") || bosh("Баланс бўш");
+
+	if (STAGE === "tkatskiy") {
+		el("t-navbat").innerHTML = `
+			<div style="font-size:16px;color:#556;margin-bottom:10px">Станок диапазонини киритинг — қаторлар очилади, ҳар станокнинг охирги маҳсулоти авто тушади.</div>
+			<div style="display:flex;gap:10px;align-items:center">
+				<input id="tk-dan" type="number" inputmode="numeric" placeholder="с №" style="font-size:20px;padding:12px;width:110px;border-radius:10px;border:2px solid #cfd6e0">
+				<input id="tk-gacha" type="number" inputmode="numeric" placeholder="по №" style="font-size:20px;padding:12px;width:110px;border-radius:10px;border:2px solid #cfd6e0">
+				<button style="font-size:18px;font-weight:800;padding:14px 20px;border-radius:12px;border:none;background:#1a7f37;color:#fff" onclick="tkOch()">ҚАТОРЛАРНИ ОЧИШ</button>
+			</div>`;
+		el("t-bugun").innerHTML = (H.bugun || []).map(j =>
+			qator(j.name, j.smena, j.izoh || "", "", j.docstatus)).join("") || bosh("Ҳали ёзув йўқ");
+		document.querySelector(".a-yangi").style.display = "none";
+		return;
+	}
+	document.querySelector(".a-yangi").style.display = "";
+
+	if (STAGE === "laminat") {
+		el("t-navbat").innerHTML = H.navbat.map(n => karta(null, n.qop,
+			`манба: ${n.src || "—"} · складда ${n.src_stok.toLocaleString("ru")} м`,
+			"", `ochYangi('${n.qop}','${n.qop}')`, "▶ ЁЗИШ")).join("") || bosh("Маҳсулот йўқ");
+	} else if (STAGE === "ekstruder") {
+		el("t-navbat").innerHTML = H.navbat.map(n => karta(null, n.stanok,
+			`склад: ${n.warehouse}`, "", `ochYangi('${n.stanok}','')`, "▶ ЁЗИШ")).join("") || bosh("Станок йўқ");
+	} else if (STAGE === "konvert") {
+		el("t-navbat").innerHTML = H.navbat.map(n => karta(n.rasm, n.qop,
+			`${n.customer || ""} · рулон қолдиғи ${n.qoldiq_metr} м · тахминан ${n.taxmin_dona} дона`,
+			"", `ochYangi('${n.pechat_jurnal}','${n.qop}')`, "▶ ТИКИШ")).join("") || bosh("Босма рулон йўқ");
+	} else if (STAGE === "kk") {
+		el("t-navbat").innerHTML = H.navbat.map(n => karta(n.rasm, n.qop,
+			`${n.konvert_jurnal} да ${n.tikildi} дона тикилган · складда ${n.stok} шт`,
+			"", `ochYangi('${n.konvert_jurnal}','${n.qop}')`, "▶ САРАЛАШ")).join("") || bosh("Текширишга қоп йўқ");
+	} else if (STAGE === "press") {
+		el("t-navbat").innerHTML = H.navbat.map(n => karta(n.rasm, n.qop,
+			`${n.kk_jurnal} да яроқли ${n.yaroqli} · складда ${n.stok} шт`,
+			"", `ochYangi('${n.kk_jurnal}','${n.qop}')`, "▶ ПРЕСС")).join("") || bosh("Кипалашга қоп йўқ");
+	}
+	el("t-bugun").innerHTML = (H.bugun || []).map(j =>
+		qator(j.name, j.smena, j.izoh || "", "", j.docstatus)).join("") || bosh("Ҳали ёзув йўқ");
+}
+
+function karta(rasm, nomi, meta, qoshimcha, onclick, tugma) {
+	return `<div class="t-card">
+		${rasm ? `<img src="${rasm}">` : `<div class="noimg">📦</div>`}
+		<div class="info"><div class="nomi">${nomi}</div><div class="meta">${meta}</div>${qoshimcha}</div>
+		<button onclick="${onclick}">${tugma}</button></div>`;
+}
+function qator(name, smena, matn, qiymat, docstatus) {
+	return `<div class="row"><b>${name}</b><span>${smena}</span><span style="flex:1">${matn}</span>
+		<span>${qiymat}</span><span class="badge ${docstatus ? "b1" : "b0"}">${docstatus ? "Тасдиқланган" : "Кутилмоқда"}</span></div>`;
+}
+function bosh(t) { return `<div style='color:#889;padding:20px'>${t}</div>`; }
+
+function bal(b) {
+	return `<div class="bal ${b.qty < 100 ? "past" : ""}"><div class="q">${b.qty.toLocaleString("ru")}</div><div class="n">${b.item} (${b.birlik})</div></div>`;
+}
+
+// har etap formasi: [hujjat kaliti, sarlavha, maydonlar, api metod]
+const FORMALAR = {
+	pechat: {
+		title: "Босма ёзуви", kalit: "topshiriq", method: "pechat_yoz",
+		tanlov: n => [n.topshiriq + "|" + n.qop, `${n.qop} — ${n.customer || ""} (${n.topshiriq})`],
+		fields: [["metr", "Босилган метр"]],
+		natija: (r, v) => `Расход: ${r.rasxod} — ${v.metr} м<br>Краска (AI): ${r.kraskalar.map(k => `${k.rang} ${k.kg}кг`).join(", ") || "—"}`,
+		args: (kalit, qop, v) => ({ topshiriq: kalit, qop_item: qop, metr: v.metr }),
+	},
+	konvert: {
+		title: "Тикув ёзуви", kalit: "pechat_jurnal", method: "konvert_yoz",
+		tanlov: n => [n.pechat_jurnal + "|" + n.qop, `${n.qop} (${n.pechat_jurnal}, ${n.qoldiq_metr} м)`],
+		fields: [["sht", "Тикилди (ШТ)"], ["kg", "Оғирлиги (КГ)"]],
+		natija: (r, v) => `Расход: ${r.rasxod} — ${r.rasxod_metr} м · ${r.gr_dona} гр/дона`,
+		args: (kalit, qop, v) => ({ pechat_jurnal: kalit, sht: v.sht, kg: v.kg }),
+	},
+	kk: {
+		title: "Саралаш ёзуви", kalit: "konvert_jurnal", method: "kk_yoz",
+		tanlov: n => [n.konvert_jurnal + "|" + n.qop, `${n.qop} (${n.konvert_jurnal}, ${n.stok} шт)`],
+		fields: [["yaroqli_sht", "Яроқли (ШТ)"], ["brak_sht", "Брак (ШТ)"], ["brak_kg", "Брак (КГ)"]],
+		natija: (r, v) => `Яроқли ${r.yaroqli} → Пресс · брак ${r.brak} шт / ${r.brak_kg} кг`,
+		args: (kalit, qop, v) => ({ konvert_jurnal: kalit, mahsulot: qop,
+			yaroqli_sht: v.yaroqli_sht, brak_sht: v.brak_sht || 0, brak_kg: v.brak_kg || 0 }),
+	},
+	press: {
+		title: "Пресс ёзуви", kalit: "kk_jurnal", method: "press_yoz",
+		tanlov: n => [n.kk_jurnal + "|" + n.qop, `${n.qop} (${n.kk_jurnal}, ${n.stok} шт)`],
+		fields: [["sht", "Кипаланди (ШТ)"], ["kipa_soni", "Кипа сони"], ["lenta_kg", "Пресс лента (КГ)"]],
+		natija: (r, v) => `${r.sht} шт → ГП склад · ${r.kipa} кипа · лента ${r.lenta} кг`,
+		args: (kalit, qop, v) => ({ kk_jurnal: kalit, mahsulot: qop,
+			sht: v.sht, kipa_soni: v.kipa_soni || 0, lenta_kg: v.lenta_kg || 0 }),
+	},
+	laminat: {
+		title: "Ламинат ёзуви", method: "laminat_yoz",
+		tanlov: n => [n.qop + "|" + n.qop, `${n.qop} (манба ${n.src || "—"}: ${n.src_stok} м)`],
+		fields: [["metr", "Метр"], ["kg", "КГ"], ["rasxod_kg", "Расход рулон КГ"], ["rasxod_metr", "Расход метр (бўш = метрга тенг)"]],
+		natija: (r, v) => `Расход: ${r.rasxod} — ${r.rasxod_metr} м · Сырьё ${r.siryo} кг + ДП ${r.dp} кг · В1М ${r.v_1m} г/м`,
+		args: (kalit, qop, v) => ({ mahsulot: kalit, metr: v.metr, kg: v.kg, rasxod_kg: v.rasxod_kg, rasxod_metr: v.rasxod_metr || 0 }),
+	},
+	ekstruder: {
+		title: "Экструдор ёзуви", method: "ekstruder_yoz",
+		tanlov: n => [n.stanok + "|", `${n.stanok}`],
+		fields: [["kg", "Ишлаб чиқарилди (КГ)"], ["sht", "ШТ (намотка сони)"], ["namotka", "Намотка (КГ)"]],
+		natija: (r, v) => `Нитка ${r.kg} кг · ${r.sht} шт<br>Материаллар (BOM): ${r.materiallar.map(m => `${m.item} ${m.qty}кг`).join(", ")}<br><b>Бошлиқ фактга тузатиб тасдиқлайди.</b>`,
+		args: (kalit, qop, v) => ({ stanok: kalit, kg: v.kg, sht: v.sht || 0, namotka: v.namotka || 0 }),
+	},
+};
+
+function ochYangi(kalit, qop) {
+	const F = FORMALAR[STAGE];
+	el("f-title").textContent = F.title;
+	el("f-natija").innerHTML = "";
+	el("f-saqla").disabled = false;
+	const opts = H.navbat.map(F.tanlov);
+	el("f-fields").innerHTML =
+		`<label>Танланг</label><select id="f-kalit">${opts.map(([v, t]) => `<option value="${v}">${t}</option>`).join("")}</select>` +
+		F.fields.map(([id, lbl]) =>
+			`<label>${lbl}</label><input id="f-${id}" type="number" inputmode="decimal" placeholder="0">`).join("");
+	if (kalit) el("f-kalit").value = kalit + "|" + qop;
+	el("m-yangi").classList.add("open");
+	setTimeout(() => el("f-" + F.fields[0][0]).focus(), 100);
+}
+
+async function saqlaYangi() {
+	const F = FORMALAR[STAGE];
+	const [kalit, qop] = el("f-kalit").value.split("|");
+	const v = {};
+	F.fields.forEach(([id]) => v[id] = parseFloat(el("f-" + id).value) || 0);
+	if (!v[F.fields[0][0]]) { el("f-natija").innerHTML = "<div class='xato'>Асосий қийматни киритинг</div>"; return; }
+	el("f-saqla").disabled = true;
+	try {
+		const args = F.args(kalit, qop, v);
+		args.smena = el("t-smena").value;
+		args.xodim = el("t-xodim").value;
+		const r = await api(F.method, args);
+		el("f-natija").innerHTML = `<div class="natija">✅ <b>${r.name}</b> сақланди (тасдиқни бошлиқ беради)<br>${F.natija(r, v)}</div>`;
+		yukla();
+	} catch (e) {
+		el("f-natija").innerHTML = `<div class="xato">${e.message}</div>`;
+		el("f-saqla").disabled = false;
+	}
+}
+
+async function tkOch() {
+	const dan = parseInt(el("tk-dan").value), gacha = parseInt(el("tk-gacha").value);
+	if (!dan || !gacha || gacha < dan) { alert("Диапазонни тўғри киритинг (1–70)"); return; }
+	el("tk-natija").innerHTML = "";
+	el("tk-saqla").disabled = false;
+	el("tk-rows").innerHTML = "Юкланяпти...";
+	el("m-tk").classList.add("open");
+	try {
+		const rows = await api("tkatskiy_qatorlar", { dan, gacha });
+		const opts = m => H.mahsulotlar.map(x =>
+			`<option value="${x}" ${x === m ? "selected" : ""}>${x}</option>`).join("");
+		el("tk-rows").innerHTML = rows.map(r => `
+			<div class="tk-row" data-stanok="${r.stanok}">
+				<span class="st">${r.stanok}</span>
+				<select><option value=""></option>${opts(r.mahsulot)}</select>
+				<input type="number" inputmode="decimal" placeholder="метр">
+				<input type="number" inputmode="decimal" placeholder="кг">
+				<input type="number" inputmode="decimal" placeholder="п/м">
+			</div>`).join("");
+	} catch (e) {
+		el("tk-rows").innerHTML = `<div class="xato">${e.message}</div>`;
+	}
+}
+
+async function tkSaqla() {
+	const qatorlar = [...document.querySelectorAll("#tk-rows .tk-row")].map(d => {
+		const [sel, metr, kg, pm] = [d.querySelector("select"), ...d.querySelectorAll("input")];
+		return { stanok: d.dataset.stanok, mahsulot: sel.value,
+			metr: parseFloat(metr.value) || 0, kg: parseFloat(kg.value) || 0,
+			vyrabotka_pm: parseFloat(pm.value) || 0 };
+	}).filter(q => q.metr || q.kg);
+	if (!qatorlar.length) { el("tk-natija").innerHTML = "<div class='xato'>Ҳеч бўлмаса битта станокка метр/кг киритинг</div>"; return; }
+	el("tk-saqla").disabled = true;
+	try {
+		const r = await api("tkatskiy_yoz", {
+			smena: el("t-smena").value, xodim: el("t-xodim").value,
+			qatorlar: JSON.stringify(qatorlar),
+		});
+		el("tk-natija").innerHTML = `<div class="natija">✅ <b>${r.name}</b> сақланди (тасдиқни бошлиқ беради)<br>${r.qatorlar} станок · ${r.jami_metr} м · ${r.jami_kg} кг</div>`;
+		yukla();
+	} catch (e) {
+		el("tk-natija").innerHTML = `<div class="xato">${e.message}</div>`;
+		el("tk-saqla").disabled = false;
+	}
+}
+
+async function ochSmf() {
+	el("s-natija").innerHTML = "";
+	el("s-saqla").disabled = false;
+	el("s-rows").innerHTML = "Юкланяпти...";
+	el("m-smf").classList.add("open");
+	const rows = await api("smf_ai", { smena: el("t-smena").value });
+	const ranglar = new Set(rows.map(r => r.rang));
+	(H.kraskalar || []).forEach(k => ranglar.add(k.item));
+	const aiMap = {}; rows.forEach(r => aiMap[r.rang] = r.ai_kg);
+	el("s-rows").innerHTML = [...ranglar].map(r => `
+		<div class="smf-row" data-rang="${r}">
+			<span class="r">${r}</span><span class="ai">AI: ${aiMap[r] || 0}</span>
+			<input type="number" inputmode="decimal" placeholder="0" step="0.1">
+		</div>`).join("");
+}
+
+async function saqlaSmf() {
+	const ranglar = [...document.querySelectorAll("#s-rows .smf-row")]
+		.map(d => ({ rang: d.dataset.rang, fakt_kg: parseFloat(d.querySelector("input").value) || 0 }))
+		.filter(r => r.fakt_kg > 0);
+	if (!ranglar.length) { el("s-natija").innerHTML = "<div class='xato'>Ҳеч бўлмаса битта ранг киритинг</div>"; return; }
+	el("s-saqla").disabled = true;
+	try {
+		const r = await api("smf_yoz", { smena: el("t-smena").value, ranglar: JSON.stringify(ranglar) });
+		el("s-natija").innerHTML = `<div class="natija">✅ <b>${r.name}</b> сақланди<br>` +
+			r.qatorlar.map(q => `${q.rang}: факт ${q.fakt_kg} / AI ${q.ai_kg} (фарқ ${q.farq})`).join("<br>") + "</div>";
+		yukla();
+	} catch (e) {
+		el("s-natija").innerHTML = `<div class="xato">${e.message}</div>`;
+		el("s-saqla").disabled = false;
+	}
+}
+
+yukla();
+setInterval(yukla, 60000);
+</script>
+{%- endblock -%}
