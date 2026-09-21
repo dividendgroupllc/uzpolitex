@@ -63,12 +63,17 @@
 	.smf-row .r { flex: 1; font-size: 17px; font-weight: 600; }
 	.smf-row .ai { width: 82px; text-align: right; color: #667; font-size: 15px; }
 	.smf-row input { width: 100px !important; text-align: right; }
+	.lam-head, .lam-row { display: grid; grid-template-columns: 1fr 88px 88px 88px 88px; gap: 6px; align-items: center; }
+	.lam-head { font-size: 12px; color: #667; font-weight: 700; margin: 8px 0 4px; }
+	.lam-row { margin: 4px 0; }
+	.lam-row select, .lam-row input { font-size: 16px !important; padding: 8px !important; }
 	.tk-head, .tk-row { display: grid; grid-template-columns: 52px 1fr 92px 92px 92px; gap: 6px; align-items: center; }
 	.tk-head { font-size: 12px; color: #667; font-weight: 700; margin: 8px 0 4px; }
 	.tk-row { margin: 4px 0; }
 	.tk-row .st { font-size: 17px; font-weight: 800; text-align: center; }
 	.tk-row select, .tk-row input { font-size: 16px !important; padding: 8px !important; }
 	.natija { background: #f0fdf4; border: 2px solid #86efac; border-radius: 12px; padding: 12px; margin-top: 10px; font-size: 16px; }
+	.ogoh { background: #fff7e6; border: 2px solid #f2c464; border-radius: 12px; padding: 12px; margin-top: 10px; font-size: 15px; }
 	.xato { background: #fdecec; border: 2px solid #f3b8b8; border-radius: 12px; padding: 12px; margin-top: 10px; font-size: 15px; white-space: pre-wrap; }
 </style>
 
@@ -117,6 +122,46 @@
 	</div>
 </div>
 
+<!-- Ламинат smena modali -->
+<div class="t-modal" id="m-lam">
+	<div class="t-box" style="max-width:900px">
+		<h3>Ламинат — смена ёзуви</h3>
+		<div class="lam-head"><span>Маҳсулот</span><span>Метр</span><span>КГ</span><span>Расх.КГ</span><span>Расх.М</span></div>
+		<div id="lam-rows"></div>
+		<button onclick="lamQator()" style="margin-top:6px;font-size:15px;padding:8px 14px;border-radius:10px;border:2px dashed #cfd6e0;background:#fff">+ қатор</button>
+		<div style="display:flex;gap:10px;margin-top:10px">
+			<div style="flex:1"><label>Факт Сырьё ламинат (КГ) — смена учун БИР МАРТА</label>
+				<input id="lam-siryo" type="number" inputmode="decimal" placeholder="0"></div>
+			<div style="flex:1"><label>Факт Добавочный (КГ)</label>
+				<input id="lam-dp" type="number" inputmode="decimal" placeholder="0"></div>
+		</div>
+		<div id="lam-natija"></div>
+		<div class="btns">
+			<button class="yop" onclick="yop('m-lam')">Ёпиш</button>
+			<button class="saqla" id="lam-saqla" onclick="lamSaqla()">САҚЛАШ</button>
+		</div>
+	</div>
+</div>
+
+<!-- Экструдор fakt modali -->
+<div class="t-modal" id="m-ek">
+	<div class="t-box">
+		<h3 id="ek-title">Экструдор ёзуви</h3>
+		<label>Ишлаб чиқарилди — Нитка (КГ)</label>
+		<input id="ek-kg" type="number" inputmode="decimal" placeholder="0" onchange="ekHisobla()">
+		<div style="display:flex;gap:10px">
+			<div style="flex:1"><label>ШТ (намотка сони)</label><input id="ek-sht" type="number" inputmode="numeric" placeholder="0"></div>
+			<div style="flex:1"><label>Намотка (КГ)</label><input id="ek-namotka" type="number" inputmode="decimal" placeholder="0"></div>
+		</div>
+		<div id="ek-materiallar" style="margin-top:8px"></div>
+		<div id="ek-natija"></div>
+		<div class="btns">
+			<button class="yop" onclick="yop('m-ek')">Ёпиш</button>
+			<button class="saqla" id="ek-saqla" onclick="ekSaqla()">САҚЛАШ</button>
+		</div>
+	</div>
+</div>
+
 <!-- Ткацкий diapazon modali -->
 <div class="t-modal" id="m-tk">
 	<div class="t-box" style="max-width:860px">
@@ -152,6 +197,8 @@ let STAGE = null;
 const TITLES = { pechat: "ПЕЧАТЬ", konvert: "КОНВЕРТ (ТИКУВ)", kk: "СИФАТ НАЗОРАТИ", press: "ПРЕСС",
 	tkatskiy: "ТКАЦКИЙ", laminat: "ЛАМИНАТ", ekstruder: "ЭКСТРУДОР" };
 
+let LAST_MSGS = [];
+
 async function api(method, args) {
 	const r = await fetch("/api/method/uzpolitex.terminal.api." + method, {
 		method: "POST",
@@ -159,6 +206,15 @@ async function api(method, args) {
 		body: JSON.stringify(args || {}),
 	});
 	const j = await r.json();
+	LAST_MSGS = [];
+	try {
+		LAST_MSGS = JSON.parse(j._server_messages || "[]").map(m => {
+			const o = JSON.parse(m);
+			return { msg: (o.message || "").replace(/<[^>]+>/g, " "), indicator: o.indicator || "orange" };
+		}).filter(m => m.msg.trim());
+		const korilgan = new Set();
+		LAST_MSGS = LAST_MSGS.filter(m => !korilgan.has(m.msg) && korilgan.add(m.msg));
+	} catch (e) {}
 	if (!r.ok) {
 		let msg = "Хатолик";
 		try { msg = JSON.parse(j._server_messages || "[]").map(m => JSON.parse(m).message).join("\n") || j.exception || msg; } catch (e) { msg = j.exception || msg; }
@@ -171,7 +227,17 @@ function el(id) { return document.getElementById(id); }
 function yop(id) { el(id).classList.remove("open"); }
 
 async function yukla() {
-	H = await api("holat");
+	const urlStage = new URLSearchParams(location.search).get("stage");
+	H = await api("holat", urlStage ? { stage: urlStage } : {});
+	if (H.tanlash) {
+		el("tw").innerHTML = `<div class="t-header"><h1>СЕХ ТЕРМИНАЛИ</h1><div class="spacer"></div><span style="font-size:16px">${H.sana}</span></div>
+			<div class="t-panel"><h2>Сехни танланг</h2>
+			<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">` +
+			H.stages.map(st => `<a href="?stage=${st.key}" style="display:block;text-align:center;font-size:20px;font-weight:800;
+				padding:26px 10px;border-radius:14px;background:#1a3d6d;color:#fff;text-decoration:none">${st.nom}</a>`).join("") +
+			`</div><div style="margin-top:12px;color:#667;font-size:14px">Планшетлар ўз sex useri билан кирса, тўғридан ўз сехи очилади.</div></div>`;
+		return;
+	}
 	STAGE = H.stage;
 	el("t-sana").textContent = H.sana;
 	if (H.tayyor_emas) {
@@ -179,6 +245,11 @@ async function yukla() {
 		return;
 	}
 	el("t-title").textContent = TITLES[STAGE] || STAGE;
+	const PANEL1 = { pechat: "Навбатдаги заказлар", konvert: "Босма рулонлар — тикишга",
+		kk: "Текширишга қоплар", press: "Кипалашга қоплар",
+		tkatskiy: "Смена киритиш", laminat: "Маҳсулотлар (манба қолдиғи билан)",
+		ekstruder: "Станоклар" };
+	document.querySelectorAll(".t-panel h2")[0].textContent = PANEL1[STAGE] || "Иш рўйхати";
 	el("t-xodim").innerHTML = (H.xodimlar || []).map(x => `<option value="${x.name}">${x.employee_name}</option>`).join("");
 	document.querySelector(".a-smf").style.display = STAGE === "pechat" ? "" : "none";
 
@@ -219,10 +290,10 @@ async function yukla() {
 	if (STAGE === "laminat") {
 		el("t-navbat").innerHTML = H.navbat.map(n => karta(null, n.qop,
 			`манба: ${n.src || "—"} · складда ${n.src_stok.toLocaleString("ru")} м`,
-			"", `ochYangi('${n.qop}','${n.qop}')`, "▶ ЁЗИШ")).join("") || bosh("Маҳсулот йўқ");
+			"", `lamOch('${n.qop}')`, "▶ ЁЗИШ")).join("") || bosh("Маҳсулот йўқ");
 	} else if (STAGE === "ekstruder") {
 		el("t-navbat").innerHTML = H.navbat.map(n => karta(null, n.stanok,
-			`склад: ${n.warehouse}`, "", `ochYangi('${n.stanok}','')`, "▶ ЁЗИШ")).join("") || bosh("Станок йўқ");
+			`склад: ${n.warehouse}`, "", `ekOch('${n.stanok}')`, "▶ ЁЗИШ")).join("") || bosh("Станок йўқ");
 	} else if (STAGE === "konvert") {
 		el("t-navbat").innerHTML = H.navbat.map(n => karta(n.rasm, n.qop,
 			`${n.customer || ""} · рулон қолдиғи ${n.qoldiq_metr} м · тахминан ${n.taxmin_dona} дона`,
@@ -251,6 +322,10 @@ function qator(name, smena, matn, qiymat, docstatus) {
 		<span>${qiymat}</span><span class="badge ${docstatus ? "b1" : "b0"}">${docstatus ? "Тасдиқланган" : "Кутилмоқда"}</span></div>`;
 }
 function bosh(t) { return `<div style='color:#889;padding:20px'>${t}</div>`; }
+function ogohlar() {
+	return LAST_MSGS.map(m =>
+		`<div class="${m.indicator === "red" ? "xato" : "ogoh"}">⚠️ ${m.msg}</div>`).join("");
+}
 
 function bal(b) {
 	return `<div class="bal ${b.qty < 100 ? "past" : ""}"><div class="q">${b.qty.toLocaleString("ru")}</div><div class="n">${b.item} (${b.birlik})</div></div>`;
@@ -288,23 +363,11 @@ const FORMALAR = {
 		args: (kalit, qop, v) => ({ kk_jurnal: kalit, mahsulot: qop,
 			sht: v.sht, kipa_soni: v.kipa_soni || 0, lenta_kg: v.lenta_kg || 0 }),
 	},
-	laminat: {
-		title: "Ламинат ёзуви", method: "laminat_yoz",
-		tanlov: n => [n.qop + "|" + n.qop, `${n.qop} (манба ${n.src || "—"}: ${n.src_stok} м)`],
-		fields: [["metr", "Метр"], ["kg", "КГ"], ["rasxod_kg", "Расход рулон КГ"], ["rasxod_metr", "Расход метр (бўш = метрга тенг)"]],
-		natija: (r, v) => `Расход: ${r.rasxod} — ${r.rasxod_metr} м · Сырьё ${r.siryo} кг + ДП ${r.dp} кг · В1М ${r.v_1m} г/м`,
-		args: (kalit, qop, v) => ({ mahsulot: kalit, metr: v.metr, kg: v.kg, rasxod_kg: v.rasxod_kg, rasxod_metr: v.rasxod_metr || 0 }),
-	},
-	ekstruder: {
-		title: "Экструдор ёзуви", method: "ekstruder_yoz",
-		tanlov: n => [n.stanok + "|", `${n.stanok}`],
-		fields: [["kg", "Ишлаб чиқарилди (КГ)"], ["sht", "ШТ (намотка сони)"], ["namotka", "Намотка (КГ)"]],
-		natija: (r, v) => `Нитка ${r.kg} кг · ${r.sht} шт<br>Материаллар (BOM): ${r.materiallar.map(m => `${m.item} ${m.qty}кг`).join(", ")}<br><b>Бошлиқ фактга тузатиб тасдиқлайди.</b>`,
-		args: (kalit, qop, v) => ({ stanok: kalit, kg: v.kg, sht: v.sht || 0, namotka: v.namotka || 0 }),
-	},
 };
 
 function ochYangi(kalit, qop) {
+	if (STAGE === "ekstruder") return ekOch(kalit || (H.navbat[0] || {}).stanok);
+	if (STAGE === "laminat") return lamOch(kalit);
 	const F = FORMALAR[STAGE];
 	el("f-title").textContent = F.title;
 	el("f-natija").innerHTML = "";
@@ -331,11 +394,116 @@ async function saqlaYangi() {
 		args.smena = el("t-smena").value;
 		args.xodim = el("t-xodim").value;
 		const r = await api(F.method, args);
-		el("f-natija").innerHTML = `<div class="natija">✅ <b>${r.name}</b> сақланди (тасдиқни бошлиқ беради)<br>${F.natija(r, v)}</div>`;
+		el("f-natija").innerHTML = ogohlar() + `<div class="natija">✅ <b>${r.name}</b> САҚЛАНДИ ва ТАСДИҚЛАНДИ<br>${F.natija(r, v)}</div>`;
 		yukla();
 	} catch (e) {
 		el("f-natija").innerHTML = `<div class="xato">${e.message}</div>`;
 		el("f-saqla").disabled = false;
+	}
+}
+
+function lamQator(mahsulot) {
+	const opts = H.navbat.map(n =>
+		`<option value="${n.qop}" ${n.qop === mahsulot ? "selected" : ""}>${n.qop}</option>`).join("");
+	el("lam-rows").insertAdjacentHTML("beforeend", `
+		<div class="lam-row">
+			<select><option value=""></option>${opts}</select>
+			<input type="number" inputmode="decimal" placeholder="метр">
+			<input type="number" inputmode="decimal" placeholder="кг">
+			<input type="number" inputmode="decimal" placeholder="расх.кг">
+			<input type="number" inputmode="decimal" placeholder="=метр">
+		</div>`);
+}
+
+function lamOch(mahsulot) {
+	el("lam-rows").innerHTML = "";
+	lamQator(mahsulot);
+	lamQator();
+	el("lam-siryo").value = el("lam-dp").value = "";
+	el("lam-natija").innerHTML = "";
+	el("lam-saqla").disabled = false;
+	el("m-lam").classList.add("open");
+}
+
+async function lamSaqla() {
+	const qatorlar = [...document.querySelectorAll("#lam-rows .lam-row")].map(d => {
+		const [metr, kg, rkg, rm] = [...d.querySelectorAll("input")].map(i => parseFloat(i.value) || 0);
+		return { mahsulot: d.querySelector("select").value, metr, kg, rasxod_kg: rkg, rasxod_metr: rm };
+	}).filter(q => q.mahsulot && (q.metr || q.kg));
+	if (!qatorlar.length) { el("lam-natija").innerHTML = "<div class='xato'>Ҳеч бўлмаса битта қаторни тўлдиринг</div>"; return; }
+	el("lam-saqla").disabled = true;
+	try {
+		const r = await api("laminat_yoz", {
+			smena: el("t-smena").value, xodim: el("t-xodim").value,
+			qatorlar: JSON.stringify(qatorlar),
+			fakt_siryo: parseFloat(el("lam-siryo").value) || 0,
+			fakt_dp: parseFloat(el("lam-dp").value) || 0,
+		});
+		el("lam-natija").innerHTML = ogohlar() + `<div class="natija">✅ <b>${r.name}</b> САҚЛАНДИ ва ТАСДИҚЛАНДИ<br>` +
+			r.qatorlar.map(q => `${q.mahsulot}: Сырьё ${q.siryo} + ДП ${q.dp} кг · В1М ${q.v_1m} г/м`).join("<br>") +
+			`<br>Жами: ${r.jami_metr} м · ${r.jami_kg} кг</div>`;
+		yukla();
+	} catch (e) {
+		el("lam-natija").innerHTML = `<div class="xato">${e.message}</div>`;
+		el("lam-saqla").disabled = false;
+	}
+}
+
+let EK_STANOK = null;
+
+function ekOch(stanok) {
+	EK_STANOK = stanok;
+	el("ek-title").textContent = "Экструдор ёзуви — " + stanok;
+	el("ek-kg").value = el("ek-sht").value = el("ek-namotka").value = "";
+	el("ek-materiallar").innerHTML = "<div style='color:#889;font-size:14px;margin-top:6px'>КГ киритилса — хом ашё сарфи BOM бўйича таклиф қилинади, ФАКТГА тузатинг.</div>";
+	el("ek-natija").innerHTML = "";
+	el("ek-saqla").disabled = false;
+	el("m-ek").classList.add("open");
+	setTimeout(() => el("ek-kg").focus(), 100);
+}
+
+async function ekHisobla() {
+	const kg = parseFloat(el("ek-kg").value);
+	if (!kg) return;
+	const r = await api("ekstruder_forma", { kg });
+	el("ek-materiallar").innerHTML =
+		`<div style="font-weight:700;margin:8px 0 4px">Хом ашё сарфи — ФАКТ (BOM таклифи тузатилади):</div>` +
+		r.materiallar.map(m => `
+			<div class="smf-row" data-item="${m.item}">
+				<span class="r">${m.item}</span>
+				<input type="number" inputmode="decimal" value="${m.qty}" step="0.1">
+			</div>`).join("") +
+		`<div class="smf-row" data-otxod="1">
+			<span class="r" style="color:#b45309">Экструдор отход (КГ)</span>
+			<input type="number" inputmode="decimal" value="${r.otxod}" step="0.1">
+		</div>`;
+}
+
+async function ekSaqla() {
+	const kg = parseFloat(el("ek-kg").value);
+	if (!kg) { el("ek-natija").innerHTML = "<div class='xato'>КГ ни киритинг</div>"; return; }
+	const rows = [...document.querySelectorAll("#ek-materiallar .smf-row")];
+	if (!rows.length) { await ekHisobla(); el("ek-natija").innerHTML = "<div class='xato'>Хом ашё сарфини текшириб, яна САҚЛАШ босинг</div>"; return; }
+	const materiallar = rows.filter(d => d.dataset.item)
+		.map(d => ({ item: d.dataset.item, qty: parseFloat(d.querySelector("input").value) || 0 }));
+	const otxodRow = rows.find(d => d.dataset.otxod);
+	const otxod_kg = otxodRow ? parseFloat(otxodRow.querySelector("input").value) || 0 : 0;
+	el("ek-saqla").disabled = true;
+	try {
+		const r = await api("ekstruder_yoz", {
+			stanok: EK_STANOK, kg, sht: parseFloat(el("ek-sht").value) || 0,
+			namotka: parseFloat(el("ek-namotka").value) || 0,
+			smena: el("t-smena").value, xodim: el("t-xodim").value,
+			materiallar: JSON.stringify(materiallar), otxod_kg,
+		});
+		el("ek-natija").innerHTML = ogohlar() + `<div class="natija">✅ <b>${r.name}</b> САҚЛАНДИ ва ТАСДИҚЛАНДИ<br>
+			Нитка ${r.kg} кг · ${r.sht} шт · отход ${r.otxod} кг<br>
+			Сарф: ${r.materiallar.map(m => `${m.item} ${m.qty}кг`).join(", ")}<br>
+			В 1 ШТ: ${r.v_1_sht} кг · Разница: ${r.raznitsa} кг</div>`;
+		yukla();
+	} catch (e) {
+		el("ek-natija").innerHTML = `<div class="xato">${e.message}</div>`;
+		el("ek-saqla").disabled = false;
 	}
 }
 
@@ -377,7 +545,7 @@ async function tkSaqla() {
 			smena: el("t-smena").value, xodim: el("t-xodim").value,
 			qatorlar: JSON.stringify(qatorlar),
 		});
-		el("tk-natija").innerHTML = `<div class="natija">✅ <b>${r.name}</b> сақланди (тасдиқни бошлиқ беради)<br>${r.qatorlar} станок · ${r.jami_metr} м · ${r.jami_kg} кг</div>`;
+		el("tk-natija").innerHTML = ogohlar() + `<div class="natija">✅ <b>${r.name}</b> САҚЛАНДИ ва ТАСДИҚЛАНДИ<br>${r.qatorlar} станок · ${r.jami_metr} м · ${r.jami_kg} кг</div>`;
 		yukla();
 	} catch (e) {
 		el("tk-natija").innerHTML = `<div class="xato">${e.message}</div>`;
@@ -409,7 +577,7 @@ async function saqlaSmf() {
 	el("s-saqla").disabled = true;
 	try {
 		const r = await api("smf_yoz", { smena: el("t-smena").value, ranglar: JSON.stringify(ranglar) });
-		el("s-natija").innerHTML = `<div class="natija">✅ <b>${r.name}</b> сақланди<br>` +
+		el("s-natija").innerHTML = ogohlar() + `<div class="natija">✅ <b>${r.name}</b> сақланди<br>` +
 			r.qatorlar.map(q => `${q.rang}: факт ${q.fakt_kg} / AI ${q.ai_kg} (фарқ ${q.farq})`).join("<br>") + "</div>";
 		yukla();
 	} catch (e) {

@@ -36,6 +36,15 @@ override_doctype_dashboards = {
 # Apps
 # ------------------
 
+add_to_apps_screen = [
+	{
+		"name": "terminal",
+		"logo": "/assets/uzpolitex/images/terminal.svg",
+		"title": "Сех терминали",
+		"route": "/terminal",
+	}
+]
+
 # required_apps = []
 
 # Each item in the list will be shown as an app in the apps page

@@ -136,7 +136,7 @@
    "table_fieldname": "qatorlar"
   }
  ],
- "modified": "2026-09-19 20:00:00.000000",
+ "modified": "2026-09-20 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Uzpolitex",
  "name": "KK Jurnal",
@@ -164,7 +164,8 @@
    "read": 1,
    "report": 1,
    "role": "Оператор производства",
-   "write": 1
+   "write": 1,
+   "submit": 1
   },
   {
    "amend": 1,

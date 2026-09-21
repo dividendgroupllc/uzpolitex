@@ -52,12 +52,24 @@ def _xodimlar(dept):
 	)
 
 
+STAGE_NOMLARI = [
+	("ekstruder", "ЭКСТРУДОР"), ("tkatskiy", "ТКАЦКИЙ"), ("laminat", "ЛАМИНАТ"),
+	("pechat", "ПЕЧАТЬ"), ("konvert", "КОНВЕРТ"), ("kk", "СИФАТ НАЗОРАТИ"), ("press", "ПРЕСС"),
+]
+
+
 @frappe.whitelist()
 def holat(stage=None):
 	"""Terminal bosh ekrani uchun hamma ma'lumot bitta so'rovda."""
 	_rol_tekshir()
-	stage = stage or stage_for_user() or "pechat"
 	sana = _smena_sana()
+	user_stage = stage_for_user()
+	if user_stage:
+		stage = user_stage  # planshet useri faqat o'z sexini ko'radi
+	elif not stage:
+		# sexga biriktirilmagan user (Administrator/boshliq) — tanlov menyusi
+		return {"tanlash": True, "sana": sana, "user": frappe.session.user,
+		        "stages": [{"key": k, "nom": n} for k, n in STAGE_NOMLARI]}
 	out = {"stage": stage, "sana": sana, "user": frappe.session.user}
 
 	if stage == "konvert":
@@ -344,35 +356,73 @@ def tkatskiy_yoz(smena, xodim, qatorlar):
 		              "vyrabotka_pm": flt(q.get("vyrabotka_pm"))} for q in rows],
 	})
 	doc.insert()
+	doc.submit()
 	return {"name": doc.name, "qatorlar": len(doc.qatorlar),
 	        "jami_metr": doc.jami_metr, "jami_kg": doc.jami_kg}
 
 
 @frappe.whitelist()
-def laminat_yoz(mahsulot, metr, kg, rasxod_kg, smena, xodim, rasxod_metr=None):
-	"""Ламинат yozuvi (qoralama). rasxod_metr bo'sh bo'lsa = metr (1:1)."""
+def laminat_yoz(smena, xodim, qatorlar, fakt_siryo=0, fakt_dp=0):
+	"""Ламинат smena yozuvi: bir necha mahsulot qatori + Сырьё/ДП FAKTI BIR MARTA
+	(qatorlarga norma ulushi bo'yicha taqsimlanadi — Excel SUMIF mantig'i)."""
 	_rol_tekshir()
+	if isinstance(qatorlar, str):
+		qatorlar = json.loads(qatorlar)
+	rows = [q for q in qatorlar if q.get("mahsulot") and (flt(q.get("metr")) or flt(q.get("kg")))]
+	if not rows:
+		frappe.throw(_("Ҳеч бўлмаса битта маҳсулот қаторини тўлдиринг."))
 	doc = frappe.get_doc({
 		"doctype": "Laminat Jurnal", "posting_date": _smena_sana(),
 		"smena": smena, "xodim": xodim,
-		"qatorlar": [{"mahsulot": mahsulot, "metr": flt(metr), "kg": flt(kg),
-		              "rasxod_kg": flt(rasxod_kg),
-		              "rasxod_metr": flt(rasxod_metr) or flt(metr)}],
+		"fakt_siryo": flt(fakt_siryo), "fakt_dp": flt(fakt_dp),
+		"qatorlar": [{
+			"mahsulot": q["mahsulot"], "metr": flt(q.get("metr")), "kg": flt(q.get("kg")),
+			"rasxod_kg": flt(q.get("rasxod_kg")),
+			"rasxod_metr": flt(q.get("rasxod_metr")) or flt(q.get("metr")),
+		} for q in rows],
 	})
 	doc.insert()
-	r = doc.qatorlar[0]
-	return {"name": doc.name, "qop": r.mahsulot, "rasxod": r.rasxod_mahsulot,
-	        "rasxod_metr": r.rasxod_metr, "siryo": round(flt(r.siryo_kg), 1),
-	        "dp": round(flt(r.dp_kg), 1), "v_1m": round(flt(r.v_1m), 1)}
+	doc.submit()
+	return {"name": doc.name,
+	        "qatorlar": [{"mahsulot": r.mahsulot, "siryo": round(flt(r.siryo_kg), 1),
+	                      "dp": round(flt(r.dp_kg), 1), "v_1m": round(flt(r.v_1m), 1)}
+	                     for r in doc.qatorlar],
+	        "jami_metr": doc.jami_metr, "jami_kg": doc.jami_kg}
+
+
+OTXOD_ITEM = "Экструдор отход"
+OTXOD_WH = "Отход склад - UH"
 
 
 @frappe.whitelist()
-def ekstruder_yoz(stanok, kg, sht, namotka, smena, xodim):
-	"""Экструдор yozuvi (qoralama SE): BOM'dan materiallar avto, boshliq faktga
-	tuzatib submit qiladi."""
+def ekstruder_forma(kg):
+	"""KG kiritilganda BOM bo'yicha material/otxod TAKLIFI — operator faktga tuzatadi."""
 	_rol_tekshir()
-	bom = frappe.db.get_value("BOM", {"item": "Нитка", "is_active": 1, "docstatus": 1}, "name")
+	bom_nom = frappe.db.get_value("BOM", {"item": "Нитка", "is_active": 1, "docstatus": 1}, "name")
+	bom = frappe.get_doc("BOM", bom_nom)
+	k = flt(kg) / flt(bom.quantity or 1)
+	materiallar = [{"item": it.item_code, "qty": round(flt(it.stock_qty or it.qty) * k, 1)}
+	               for it in bom.items]
+	otxod = 0.0
+	for sc in (bom.get("scrap_items") or []):
+		if sc.item_code == OTXOD_ITEM:
+			otxod = round(flt(sc.stock_qty) * k, 1)
+	return {"materiallar": materiallar, "otxod": otxod}
+
+
+@frappe.whitelist()
+def ekstruder_yoz(stanok, kg, sht, namotka, smena, xodim, materiallar, otxod_kg=0):
+	"""Экструдор FAKT yozuvi: operator tuzatgan material sarflari + otxod +
+	tayyor Нитка. Hujjat BOM'ga bog'lanadi (fg_completed_qty saqlanishi uchun ham),
+	qatorlar esa fakt. В1ШТ/Разница nazorati stock_entry hookida ishlaydi."""
+	_rol_tekshir()
+	if isinstance(materiallar, str):
+		materiallar = json.loads(materiallar)
+	materiallar = [m for m in materiallar if flt(m.get("qty"))]
+	if not materiallar:
+		frappe.throw(_("Камида битта хом ашё сарфини киритинг."))
 	wh = frappe.db.get_value("Workstation", stanok, "warehouse") or "Экструдор - UH"
+
 	se = frappe.new_doc("Stock Entry")
 	se.stock_entry_type = "Manufacture"
 	se.purpose = "Manufacture"
@@ -380,21 +430,29 @@ def ekstruder_yoz(stanok, kg, sht, namotka, smena, xodim):
 	se.posting_date = _smena_sana()
 	se.set_posting_time = 1
 	se.posting_time = nowtime()
-	se.from_bom = 1
-	se.bom_no = bom
-	se.fg_completed_qty = flt(kg)
-	se.from_warehouse = wh
-	se.to_warehouse = wh
 	se.uz_stanok = stanok
 	se.uz_smena = smena
 	se.uz_xodim = xodim
 	se.uz_sht = int(flt(sht))
 	se.uz_namotka = flt(namotka)
-	se.get_items()
+	# hujjat BOM'ga bog'lanadi (retsept ma'lumot uchun), qatorlar esa FAKT:
+	# ERPNext from_bom=1 da fg_completed_qty ni saqlaydi, qatorlarga tegmaydi
+	se.from_bom = 1
+	se.bom_no = frappe.db.get_value("BOM", {"item": "Нитка", "is_active": 1, "docstatus": 1}, "name")
+	se.fg_completed_qty = flt(kg)
+	for m in materiallar:
+		se.append("items", {"item_code": m["item"], "qty": flt(m["qty"]), "s_warehouse": wh})
+	se.append("items", {"item_code": "Нитка", "qty": flt(kg),
+	                    "t_warehouse": wh, "is_finished_item": 1})
+	if flt(otxod_kg):
+		se.append("items", {"item_code": OTXOD_ITEM, "qty": flt(otxod_kg),
+		                    "t_warehouse": OTXOD_WH, "is_legacy_scrap_item": 1,
+		                    "allow_zero_valuation_rate": 1})
 	se.insert()
-	return {"name": se.name, "kg": flt(kg), "sht": int(flt(sht)),
-	        "materiallar": [{"item": i.item_code, "qty": round(flt(i.qty), 1)}
-	                        for i in se.items if not i.is_finished_item]}
+	se.submit()
+	return {"name": se.name, "kg": flt(kg), "sht": int(flt(sht)), "otxod": flt(otxod_kg),
+	        "materiallar": [{"item": m["item"], "qty": flt(m["qty"])} for m in materiallar],
+	        "v_1_sht": round(flt(se.uz_v_1_sht), 3), "raznitsa": round(flt(se.uz_raznitsa), 2)}
 
 
 @frappe.whitelist()
@@ -407,6 +465,7 @@ def konvert_yoz(pechat_jurnal, sht, kg, smena, xodim):
 		"qatorlar": [{"pechat_jurnal": pechat_jurnal, "sht": int(flt(sht)), "kg": flt(kg)}],
 	})
 	doc.insert()
+	doc.submit()
 	r = doc.qatorlar[0]
 	return {"name": doc.name, "qop": r.mahsulot, "rasxod": r.rasxod_mahsulot,
 	        "rasxod_metr": r.rasxod_metr, "gr_dona": round(flt(r.gr_dona), 1)}
@@ -424,6 +483,7 @@ def kk_yoz(konvert_jurnal, yaroqli_sht, brak_sht, brak_kg, smena, xodim, mahsulo
 		              "brak_kg": flt(brak_kg)}],
 	})
 	doc.insert()
+	doc.submit()
 	r = doc.qatorlar[0]
 	return {"name": doc.name, "qop": r.mahsulot, "yaroqli": r.yaroqli_sht,
 	        "brak": r.brak_sht, "brak_kg": r.brak_kg}
@@ -441,6 +501,7 @@ def press_yoz(kk_jurnal, sht, kipa_soni, lenta_kg, smena, xodim, mahsulot=None):
 		              "lenta_kg": flt(lenta_kg)}],
 	})
 	doc.insert()
+	doc.submit()
 	r = doc.qatorlar[0]
 	return {"name": doc.name, "qop": r.mahsulot, "sht": r.sht,
 	        "kipa": r.kipa_soni, "lenta": r.lenta_kg}
@@ -461,6 +522,7 @@ def pechat_yoz(topshiriq, metr, smena, xodim, qop_item=None):
 		"metr": flt(metr),
 	})
 	doc.insert()
+	doc.submit()
 	return {
 		"name": doc.name,
 		"qop": doc.qop_item,
@@ -493,6 +555,7 @@ def smf_yoz(smena, ranglar):
 		"ranglar": [{"rang": r["rang"], "fakt_kg": flt(r["fakt_kg"])} for r in ranglar if flt(r.get("fakt_kg"))],
 	})
 	doc.insert()
+	doc.submit()
 	return {
 		"name": doc.name,
 		"qatorlar": [{"rang": r.rang, "fakt_kg": r.fakt_kg, "ai_kg": r.ai_kg, "farq": r.farq}
